@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/treinos"
+        android:icon="@drawable/ic_directions_run_black_24dp"
+        android:title="Treinos" />
+    <item
+        android:id="@+id/aulas"
+        android:title="Aulas"
+        android:icon="@drawable/ic_today_black_24dp"/>
+    <item
+        android:id="@+id/pr"
+        android:title="PRs"
+        android:icon="@drawable/ic_stars_black_24dp"/>
+    <item
+        android:id="@+id/configs"
+        android:title="Configurações"
+        android:icon="@drawable/ic_settings_black_24dp"/>
+</menu>
