@@ -67,6 +67,7 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
         //
         lv = (ListView) findViewById(R.id.lvClasses);
         classesList = new ArrayList<>();
+        teachersList = new ArrayList<>();
         //
         GetClasses();
     }
@@ -133,15 +134,15 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
 
     private  void UpdateClasses(int id_aula, String nome, int spinner_id, String max_students, String data, String timer){
         Requests req = new Requests(API.URL_EDIT_CLASSES + "&id="+id_aula+"&nome="+nome+"&teacher="+spinner_id+"&max_students="+max_students+"" +
-                "&data="+data+"&timer="+timer+"", null);
+                "&data="+data+"&timer="+timer, null);
         req.execute();
     }
 
     private void RefreshListClasses(JSONArray classes) throws JSONException {
         classesList.clear();
 
-        for (int i = 0; i < classes.length(); i++) {
-            JSONObject obj = classes.getJSONObject(i);
+        for (int i = 0; i < classes.getJSONArray(0).length(); i++) {
+            JSONObject obj = classes.getJSONArray(0).getJSONObject(i);
             classesList.add(new Classes(
                     obj.getInt("id"),
                     obj.getString("classe_name"),
@@ -200,7 +201,7 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
             editar_button.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Dialogbox_categoria(classes.getData(), classes.getClasse_name(), classes.getTeacher(), classes.getMax_students(), classes.getId(), classes.getTimer(), spinnerAdapter);
+                    CustomDialog(classes.getData(), classes.getClasse_name(), classes.getTeacher(), classes.getMax_students(), classes.getId(), classes.getTimer(), spinnerAdapter);
                 }
             });
 
@@ -288,7 +289,7 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
         spin.setAdapter(spinnerAdapter);
     }
 
-    private void Dialogbox_categoria(final String data, final String name, final String teacher, int max_alunos, final int id_aula, String trainingsTimer, final ArrayAdapter spinnerAdapter) {
+    private void CustomDialog(final String data, final String name, final String teacher, int max_alunos, final int id_aula, String trainingsTimer, final ArrayAdapter spinnerAdapter) {
         //Váriaveis iniciais, do layout, do alert, da caixa de texto, spinner e do que vai ser carregado da db
         final AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
         View mView = getLayoutInflater().inflate(R.layout.custom_dialog, null);
@@ -313,7 +314,7 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
-                open_calendar(data_text);
+                OpenCalendar(data_text);
             }
         });
         //click no relogio
@@ -321,7 +322,7 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
             @RequiresApi(api = Build.VERSION_CODES.N)
             @Override
             public void onClick(View view) {
-                open_timer(timer_text);
+                OpenClock(timer_text);
             }
         });
         //gravar alterações
@@ -340,7 +341,7 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void open_calendar(final TextView data_view) {
+    private void OpenCalendar(final TextView data_view) {
         int mYear, mMonth, mDay;
         final Calendar c = Calendar.getInstance();
         mYear = c.get(Calendar.YEAR);
@@ -360,7 +361,7 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
     }
 
     @RequiresApi(api = Build.VERSION_CODES.N)
-    private void open_timer(final TextView hora_view) {
+    private void OpenClock(final TextView hora_view) {
         Calendar mcurrentTime = Calendar.getInstance();
         int hour = mcurrentTime.get(Calendar.HOUR_OF_DAY);
         int minute = mcurrentTime.get(Calendar.MINUTE);
