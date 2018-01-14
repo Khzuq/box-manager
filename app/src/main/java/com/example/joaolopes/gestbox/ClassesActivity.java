@@ -5,17 +5,20 @@ import android.app.DatePickerDialog;
 import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
+import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.NavigationView;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
@@ -49,12 +52,14 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
     List<Classes> classesList;
     static List<Teachers> teachersList;
     ArrayAdapter<String> spinnerAdapter = null;
+    FloatingActionButton fab_cal, fab_add;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_classes);
-        //
+
+        //MENU
         dl = (DrawerLayout) findViewById(R.id.drawerMenu);
         dl.setClickable(true);
         toogle = new ActionBarDrawerToggle(this, dl, R.string.openMenu, R.string.closeMenu);
@@ -64,13 +69,58 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
         NavigationView navigationView = (NavigationView) findViewById(R.id.nv);
         navigationView.bringToFront(); //para o click funcionar
         navigationView.setNavigationItemSelectedListener(this);
-        //
+
+        //LISTAS / LISTVIEWS
         lv = (ListView) findViewById(R.id.lvClasses);
         classesList = new ArrayList<>();
         teachersList = new ArrayList<>();
+
+        //FLOATING BUTTONS
+        fab_cal = findViewById(R.id.fab_cal);
+        fab_add = findViewById(R.id.fab_add);
+
+        //ABRE POPUP ADICIONAR
+        fab_add.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DialogBoxADD();
+            }
+        });
+
+        //ABRE POPUP CALENDARIO
+        fab_cal.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View view) {
+                int mYear, mMonth, mDay;
+                final Calendar c = Calendar.getInstance();
+                mYear = c.get(Calendar.YEAR);
+                mMonth = c.get(Calendar.MONTH);
+                mDay = c.get(Calendar.DAY_OF_MONTH);
+
+                DatePickerDialog datePickerDialog = new DatePickerDialog(ClassesActivity.this,
+                        new DatePickerDialog.OnDateSetListener() {
+                            @Override
+                            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                                if(monthOfYear+1<10) {
+                                    GetClassesByDate(year + "-0" + (monthOfYear + 1) + "-" + dayOfMonth);
+                                }
+                                else{
+                                    GetClassesByDate(year + "-" + (monthOfYear + 1) + "-" + dayOfMonth);
+                                }
+                            }
+                        }, mYear, mMonth, mDay);
+                datePickerDialog.show();
+            }
+        });
+
         //
         GetClasses();
     }
+
+    /*
+        MENU
+     */
 
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -123,18 +173,29 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
         req.execute();
     }
 
+    private  void UpdateClasses(int id_aula, String nome, int spinner_id, String max_students, String data, String timer){
+        Requests req = new Requests(API.URL_EDIT_CLASSES + "&id="+id_aula+"&nome="+nome+"&teacher="+spinner_id+"&max_students="+max_students+"" +
+                "&data="+data+"&timer="+timer, null);
+        req.execute();
+    }
+
+    private  void InsertClasses(String nome, int spinner_id, String max_students, String data, String timer){
+        Requests req = new Requests(API.URL_CREATE_CLASSES+"&name="+nome+"&teacher="+spinner_id+"&max_students="+max_students+"" +
+                "&data="+data+"&timer="+timer+"", null);
+        req.execute();
+    }
+
+    private void GetClassesByDate(String data) {
+        lv.setAdapter(null);
+        Requests req = new Requests(API.URL_READbyDAY_CLASSES + data, null);
+        req.execute();
+    }
     /*
-        TEACHERS
+        TEACHERS -> para preencher o spinner no popup de editar
      */
 
     private void GetTeachers(Spinner spinner) {
         Requests req = new Requests(API.URL_READ_TEACHERS, spinner);
-        req.execute();
-    }
-
-    private  void UpdateClasses(int id_aula, String nome, int spinner_id, String max_students, String data, String timer){
-        Requests req = new Requests(API.URL_EDIT_CLASSES + "&id="+id_aula+"&nome="+nome+"&teacher="+spinner_id+"&max_students="+max_students+"" +
-                "&data="+data+"&timer="+timer, null);
         req.execute();
     }
 
@@ -147,7 +208,7 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
                     obj.getInt("id"),
                     obj.getString("classe_name"),
                     obj.getString("teacher"),
-                    obj.getInt("students"),
+                    //obj.getInt("students"),
                     obj.getInt("max_students"),
                     obj.getString("data"),
                     obj.getString("timer")
@@ -208,7 +269,7 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
             tvData.setText(classes.getData());
             tvNome.setText(classes.getClasse_name());
             tvProfessor.setText(classes.getTeacher());
-            tvInscrito.setText(String.valueOf(classes.getStudents()));
+            //tvInscrito.setText(String.valueOf(classes.getStudents()));
             tvMax.setText(String.valueOf(classes.getMax_students()));
 
             return listItem;
@@ -375,5 +436,57 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
         }, hour, minute, true);//Yes 24 hour time
 
         mTimePicker.show();
+    }
+
+    private void DialogBoxADD(){
+        //Váriaveis iniciais, do layout, do alert, da caixa de texto, spinner e do que vai ser carregado da db
+        final AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+        View mView = getLayoutInflater().inflate(R.layout.custom_add_dialog, null);
+
+        final EditText aula = (EditText)mView.findViewById(R.id.nome_aula);
+        final EditText num_aulunos = (EditText)mView.findViewById(R.id.max_alunos_edit);
+        final TextView hora = (TextView)mView.findViewById(R.id.timer_text);
+        final TextView data_view = (TextView)mView.findViewById(R.id.aula_text);
+        final TextView data_text = (TextView)mView.findViewById(R.id.data_text_aula);
+        final TextView timer_text = (TextView)mView.findViewById(R.id.timer_tempo_view);
+        Button calendar = (Button)mView.findViewById(R.id.btn_calen);
+        final Button timer = (Button)mView.findViewById(R.id.btn_timer);
+        Button save = (Button)mView.findViewById(R.id.save_changes);
+        final Spinner spinner = mView.findViewById(R.id.spinner_professor);
+        GetTeachers(spinner);
+
+        calendar.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View view) {
+                OpenCalendar(data_text);
+            }
+        });
+        timer.setOnClickListener(new View.OnClickListener() {
+            @RequiresApi(api = Build.VERSION_CODES.N)
+            @Override
+            public void onClick(View view) {
+                OpenClock(timer_text);
+            }
+        });
+        save.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                InsertClasses(aula.getText().toString(), spinner.getSelectedItemPosition(), num_aulunos.getText().toString(), data_text.getText().toString(), timer_text.getText().toString());
+            }
+        });
+
+        //TITULO
+        TextView title = new TextView(this);
+        title.setText("Adicionar Aula");
+        title.setBackgroundColor(Color.DKGRAY);
+        title.setPadding(10, 10, 10, 10);
+        title.setGravity(Gravity.CENTER);
+        title.setTextColor(Color.WHITE);
+        title.setTextSize(20);
+
+        dlgAlert.setCustomTitle(title);
+        dlgAlert.setView(mView);
+        dlgAlert.create().show();
     }
 }
