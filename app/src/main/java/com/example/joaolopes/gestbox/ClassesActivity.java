@@ -38,8 +38,11 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 public class ClassesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -78,6 +81,11 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
         //FLOATING BUTTONS
         fab_cal = findViewById(R.id.fab_cal);
         fab_add = findViewById(R.id.fab_add);
+
+        //Botão de adicionar bloqueado
+        if (Login.getId_type() == 0) {
+            fab_add.setVisibility(View.INVISIBLE);
+        }
 
         //ABRE POPUP ADICIONAR
         fab_add.setOnClickListener(new View.OnClickListener() {
@@ -238,6 +246,8 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
             TextView tvProfessor = listItem.findViewById(R.id.teacher_name);
             TextView tvInscrito = listItem.findViewById(R.id.number_students);
             TextView tvMax = listItem.findViewById(R.id.total_students);
+            final Button btn_inscricao = listItem.findViewById(R.id.quero_ir);
+            final ImageButton lista_inscricao = listItem.findViewById(R.id.quem_vai_aula);
             final ImageButton editar_button = listItem.findViewById(R.id.editar_button);
             final ImageButton apagar_button = listItem.findViewById(R.id.delete_button);
 
@@ -246,6 +256,15 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
 
             editar_button.setTag(classes.getId());
             apagar_button.setTag(classes.getId());
+
+            //bloquear aluno das opções de admin
+            if(Login.getId_type() == 0){
+                fab_add.setVisibility(View.INVISIBLE);
+                apagar_button.setVisibility(View.INVISIBLE);
+                lista_inscricao.setVisibility(View.INVISIBLE);
+                editar_button.setVisibility(View.INVISIBLE);
+            }
+
             /*
 
              */

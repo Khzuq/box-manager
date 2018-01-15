@@ -79,7 +79,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 DialogBoxADD();
             }
         });
-        //
+        //Botão de adicionar bloqueado
+        if (Login.getId_type() == 0) {
+            fab_add.setVisibility(View.INVISIBLE);
+        }
         //
         GetTrainings();
     }
@@ -185,6 +188,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
             editar_button.setTag(trainings.getId());
             apagar_button.setTag(trainings.getId());
+
+            //bloquear aluno das opções de admin
+            if(Login.getId_type() == 0){
+                fab_add.setVisibility(View.INVISIBLE);
+                apagar_button.setVisibility(View.INVISIBLE);
+                editar_button.setVisibility(View.INVISIBLE);
+            }
             /*
 
              */
