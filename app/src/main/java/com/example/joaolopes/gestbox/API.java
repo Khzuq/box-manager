@@ -9,6 +9,9 @@ public class API {
 
     //Trainings
     public static final String URL_READ_TRAININGS = ROOT_URL + "class.Trainings.php?a=get-trainings";
+    public static final String URL_CREATE_TRAININGS = ROOT_URL + "class.Trainings.php?a=insert-trainings";
+    public static final String URL_DELETE_TRAININGS = ROOT_URL + "class.Trainings.php?a=delete-trainings";
+    public static final String URL_EDIT_TRAININGS = ROOT_URL + "class.Trainings.php?a=edit-trainings";
     //Classes
     public static final String URL_CREATE_CLASSES = ROOT_URL + "class.Classes.php?a=insert-classes";
     public static final String URL_READ_CLASSES = ROOT_URL + "class.Classes.php?a=get-classes";

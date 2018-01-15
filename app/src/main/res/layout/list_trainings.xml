@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingLeft="10dp"
@@ -10,15 +11,41 @@
     android:background="#fff"
     android:orientation="vertical">
 
-    <!-- DATA -->
-    <TextView
-        android:id="@+id/data"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/LinearLayout02"
+        android:layout_width="363dp"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorPrimaryDark"
-        android:text="Treino dia 2 de Janeiro"
-        android:textSize="16sp"
-        android:textStyle="bold" />
+        android:orientation="horizontal">
+        <!-- DATA -->
+        <TextView
+            android:id="@+id/data"
+            android:layout_width="286dp"
+            android:layout_weight="1"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorPrimaryDark"
+            android:text="Treino dia 2 de Janeiro"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <ImageButton
+            android:id="@+id/editar_button"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
+            android:background="@color/white"
+            android:gravity="right"
+            android:text="s"
+            app:srcCompat="@android:drawable/ic_menu_edit" />
+
+        <ImageButton
+            android:id="@+id/delete_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:background="@color/white"
+            android:gravity="right"
+            app:srcCompat="@android:drawable/ic_menu_delete" />
+    </LinearLayout>
 
     <!-- WARMUP -->
     <TextView
