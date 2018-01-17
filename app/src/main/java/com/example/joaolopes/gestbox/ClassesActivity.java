@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -143,6 +144,21 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
                 break;
             case R.id.pr:
                 OpenAnotherActivity(PRsActivity.class);
+                break;
+            case R.id.mapa:
+                String addressString = "Av. Eng. Jose Afonso Maria de Figueiredo 121, 4470-285 Maia ";
+                Uri geoLocation = Uri.parse("geo:0,0?q=" +addressString);
+
+                Intent intent = new Intent(Intent.ACTION_VIEW,geoLocation);
+                intent.setData(geoLocation);
+                intent.setPackage("com.google.android.apps.maps");
+
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                } else {
+                    Log.d(TAG, "Couldn't call " + geoLocation.toString()
+                            + ", no receiving apps installed!");
+                }
                 break;
             case R.id.configs:
                 OpenAnotherActivity(SettingsActivity.class);

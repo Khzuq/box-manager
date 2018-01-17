@@ -6,6 +6,7 @@ import android.app.ProgressDialog;
 import android.app.TimePickerDialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.support.annotation.NonNull;
@@ -104,6 +105,21 @@ public class PRsActivity extends AppCompatActivity implements NavigationView.OnN
             case R.id.pr:
                 OpenAnotherActivity(PRsActivity.class);
                 break;
+            case R.id.mapa:
+                String addressString = "Av. Eng. Jose Afonso Maria de Figueiredo 121, 4470-285 Maia ";
+                Uri geoLocation = Uri.parse("geo:0,0?q=" +addressString);
+
+                Intent intent = new Intent(Intent.ACTION_VIEW,geoLocation);
+                intent.setData(geoLocation);
+                intent.setPackage("com.google.android.apps.maps");
+
+                if (intent.resolveActivity(getPackageManager()) != null) {
+                    startActivity(intent);
+                } else {
+                    Log.d(TAG, "Couldn't call " + geoLocation.toString()
+                            + ", no receiving apps installed!");
+                }
+                break;
             case R.id.configs:
                 OpenAnotherActivity(SettingsActivity.class);
                 break;
@@ -133,7 +149,7 @@ public class PRsActivity extends AppCompatActivity implements NavigationView.OnN
      */
 
     private void GetRecords() {
-        Requests req = new Requests(API.URL_READ_RECORDS, null);
+        Requests req = new Requests(API.URL_READ_RECORDS + "&id_user=" + Login.getId(), null);
         req.execute();
     }
 
@@ -148,7 +164,7 @@ public class PRsActivity extends AppCompatActivity implements NavigationView.OnN
     }
 
     private void InsertRecords(int spinner_id, int peso, String data, int id_user) {
-        Requests req = new Requests(API.URL_CREATE_RECORDS + "&id_user=" + id_user + "&data=" + data + "&peso=" + peso + "&modalidade=" + spinner_id, null);
+        Requests req = new Requests(API.URL_CREATE_RECORDS + "&id_user=" + Login.getId() + "&data=" + data + "&peso=" + peso + "&modalidade=" + spinner_id, null);
         req.execute();
     }
 

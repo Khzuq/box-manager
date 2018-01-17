@@ -35,7 +35,7 @@
             android:background="@color/white"
             android:gravity="right"
             android:text="s"
-            app:srcCompat="@android:drawable/ic_menu_edit" />
+            android:src="@drawable/edit" />
 
         <ImageButton
             android:id="@+id/delete_button"
@@ -44,7 +44,7 @@
             android:layout_gravity="right"
             android:background="@color/white"
             android:gravity="right"
-            app:srcCompat="@android:drawable/ic_menu_delete" />
+            android:src="@drawable/delete" />
     </LinearLayout>
 
     <!-- WARMUP -->
