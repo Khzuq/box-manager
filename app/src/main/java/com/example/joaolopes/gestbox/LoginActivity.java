@@ -2,6 +2,7 @@ package com.example.joaolopes.gestbox;
 
 import android.app.ProgressDialog;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -26,6 +27,21 @@ public class LoginActivity extends AppCompatActivity {
         username = findViewById(R.id.email);
         password = findViewById(R.id.password);
         btn_login = findViewById(R.id.email_sign_in_button);
+
+        SharedPreferences preferences =  getSharedPreferences("my_preferences", MODE_PRIVATE);
+
+        // Check if onboarding_complete is false
+        if(!preferences.getBoolean("onboarding_complete",false)) {
+            // Start the onboarding Activity
+            Intent onboarding = new Intent(this, OnBoardActivity.class);
+            startActivity(onboarding);
+
+            // Close the main Activity
+            finish();
+            preferences.edit()
+                    .putBoolean("onboarding_complete",true).apply();
+            return;
+        }
 
         btn_login.setOnClickListener(new View.OnClickListener() {
             @Override

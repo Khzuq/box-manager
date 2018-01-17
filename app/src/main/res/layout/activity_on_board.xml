@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorPrimaryDark"
+    tools:context="com.example.joaolopes.gestbox.OnBoardActivity">
+
+    <android.support.v4.view.ViewPager
+        android:id="@+id/slideViewPager"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@+id/dotsLayout"></android.support.v4.view.ViewPager>
+
+    <LinearLayout
+        android:id="@+id/dotsLayout"
+        android:layout_width="match_parent"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:orientation="horizontal"></LinearLayout>
+
+    <TextView
+        android:id="@+id/txvCancelar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="12dp"
+        android:layout_marginStart="8dp"
+        android:text="Cancelar"
+        android:textColor="@android:color/background_light"
+        android:visibility="invisible"
+        tools:ignore="RtlCompat" />
+
+    <TextView
+        android:id="@+id/txvSeguinte"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/txvCancelar"
+        android:layout_alignBottom="@+id/txvCancelar"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="8dp"
+        android:gravity="right"
+        android:text="Seguinte"
+        android:textColor="#FFFF"
+        tools:ignore="RtlCompat" />
+</RelativeLayout>
