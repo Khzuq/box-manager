@@ -135,7 +135,7 @@
         android:textStyle="bold" />
 
     <Button
-        android:id="@+id/quero_ir"
+        android:id="@+id/inscricao_aula"
         style="@style/Widget.AppCompat.Button.Borderless"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

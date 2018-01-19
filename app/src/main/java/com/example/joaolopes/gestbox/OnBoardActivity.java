@@ -46,7 +46,8 @@ public class OnBoardActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                if(mCurrentPage==2){
+                //== numero de paginas que vamos ter
+                if(mCurrentPage==7){
                     executarActivity(LoginActivity.class);
                 }
 

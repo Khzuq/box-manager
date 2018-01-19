@@ -28,6 +28,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.GridView;
 import android.widget.ImageButton;
 import android.widget.ListView;
 import android.widget.Spinner;
@@ -188,30 +189,40 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
      */
 
     private void GetClasses() {
-        Requests req = new Requests(API.URL_READ_CLASSES, null);
+        Requests req = new Requests(API.URL_READ_CLASSES, null, null);
         req.execute();
     }
 
     private void DeleteClasses(int id){
-        Requests req = new Requests(API.URL_DELETE_CLASSES + id, null);
+        Requests req = new Requests(API.URL_DELETE_CLASSES + id, null, null);
         req.execute();
     }
 
     private  void UpdateClasses(int id_aula, String nome, int spinner_id, String max_students, String data, String timer){
         Requests req = new Requests(API.URL_EDIT_CLASSES + "&id="+id_aula+"&nome="+nome+"&teacher="+spinner_id+"&max_students="+max_students+"" +
-                "&data="+data+"&timer="+timer, null);
+                "&data="+data+"&timer="+timer, null, null);
         req.execute();
     }
 
     private  void InsertClasses(String nome, int spinner_id, String max_students, String data, String timer){
         Requests req = new Requests(API.URL_CREATE_CLASSES+"&name="+nome+"&teacher="+spinner_id+"&max_students="+max_students+"" +
-                "&data="+data+"&timer="+timer+"", null);
+                "&data="+data+"&timer="+timer+"", null, null);
         req.execute();
     }
 
     private void GetClassesByDate(String data) {
         lv.setAdapter(null);
-        Requests req = new Requests(API.URL_READbyDAY_CLASSES + data, null);
+        Requests req = new Requests(API.URL_READbyDAY_CLASSES + data, null, null);
+        req.execute();
+    }
+
+    private void EntryClasses(int id_classe, int id_student) {
+        Requests req = new Requests(API.URL_ENTRY_CLASSES + "&id_student=" + id_student + "&id_classe=" + id_classe, null, null);
+        req.execute();
+    }
+
+    private void GetStudentsClass(int id, ListView lista) {
+        Requests req = new Requests(API.URL_USERS_CLASSES + "&id_classe=" + id, null, lista);
         req.execute();
     }
     /*
@@ -219,7 +230,7 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
      */
 
     private void GetTeachers(Spinner spinner) {
-        Requests req = new Requests(API.URL_READ_TEACHERS, spinner);
+        Requests req = new Requests(API.URL_READ_TEACHERS, spinner, null);
         req.execute();
     }
 
@@ -262,14 +273,14 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
             TextView tvProfessor = listItem.findViewById(R.id.teacher_name);
             TextView tvInscrito = listItem.findViewById(R.id.number_students);
             TextView tvMax = listItem.findViewById(R.id.total_students);
-            final Button btn_inscricao = listItem.findViewById(R.id.quero_ir);
+            final Button btn_inscricao = listItem.findViewById(R.id.inscricao_aula);
             final ImageButton lista_inscricao = listItem.findViewById(R.id.quem_vai_aula);
             final ImageButton editar_button = listItem.findViewById(R.id.editar_button);
             final ImageButton apagar_button = listItem.findViewById(R.id.delete_button);
 
             final Classes classes = classesList.get(position);
 
-
+            lista_inscricao.setTag(classes.getId());
             editar_button.setTag(classes.getId());
             apagar_button.setTag(classes.getId());
 
@@ -300,6 +311,24 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
                     CustomDialog(classes.getData(), classes.getClasse_name(), classes.getTeacher(), classes.getMax_students(), classes.getId(), classes.getTimer(), spinnerAdapter);
                 }
             });
+            /*
+
+             */
+            btn_inscricao.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    EntryClasses(classes.getId(), Login.getId());
+                }
+            });
+            /*
+
+             */
+            lista_inscricao.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    DialogBoxListaEntry(new Integer((Integer) lista_inscricao.getTag()));
+                }
+            });
 
             tvData.setText(classes.getData());
             tvNome.setText(classes.getClasse_name());
@@ -314,10 +343,12 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
     private class Requests extends AsyncTask<Void, Void, String> {
         String url;
         Spinner spinnerProf;
+        ListView list;
 
-        Requests(String url, Spinner spin) {
+        Requests(String url, Spinner spin, ListView list) {
             this.url = url;
             this.spinnerProf = spin;
+            this.list = list;
         }
 
         @Override
@@ -355,11 +386,37 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
                         }
                     } else if (obj.getString("type").equals("teachers")) {
                         CompleteSpinner(obj.getJSONArray("teachers"), spinnerProf);
+                    } else if(obj.getString("type").equals("students-to-class")){
+                        if(obj.getString("students-to-class").equals("empty")) {
+                            Toast.makeText(ClassesActivity.this, "Não existem alunos inscritos para esta aula..", Toast.LENGTH_SHORT).show();
+                            list.setAdapter(null);
+                        }
+                        else{
+                            CompleteListClassesEntries(obj.getJSONArray("students-to-class"), list);
+                        }
                     }
+
                 }
             } catch (JSONException e) {
                 Log.e(TAG, "JSONException: " + e.getMessage());
             }
+        }
+    }
+
+    private void CompleteListClassesEntries(JSONArray alunos, ListView listView) throws JSONException {
+        if (alunos.getJSONArray(0).length() > 0) {
+            List<String> nomes_dos_alunos = new ArrayList<String>();
+            for (int i = 0; i < alunos.getJSONArray(0).length(); i++) {
+                JSONObject c = alunos.getJSONArray(0).getJSONObject(i);
+                nomes_dos_alunos.add(c.getString("nome"));
+            }
+            ArrayAdapter<String> array_list = new ArrayAdapter<String>(this,
+                    android.R.layout.simple_spinner_item, nomes_dos_alunos);
+            listView.setAdapter(array_list);
+        }
+        else{
+            listView.setAdapter(null);
+            Toast.makeText(this, "Nenhum aluno se encontra inscrito!", Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -514,6 +571,24 @@ public class ClassesActivity extends AppCompatActivity implements NavigationView
         //TITULO
         TextView title = new TextView(this);
         title.setText("Adicionar Aula");
+        title.setBackgroundColor(Color.DKGRAY);
+        title.setPadding(10, 10, 10, 10);
+        title.setGravity(Gravity.CENTER);
+        title.setTextColor(Color.WHITE);
+        title.setTextSize(20);
+
+        dlgAlert.setCustomTitle(title);
+        dlgAlert.setView(mView);
+        dlgAlert.create().show();
+    }
+
+    private void DialogBoxListaEntry(Integer tag) {
+        final AlertDialog.Builder dlgAlert  = new AlertDialog.Builder(this);
+        View mView = getLayoutInflater().inflate(R.layout.custom_list_entries, null);
+        ListView lista = mView.findViewById(R.id.lvClasses);
+        GetStudentsClass(tag, lista);
+        TextView title = new TextView(this);
+        title.setText("Alunos inscritos na aula");
         title.setBackgroundColor(Color.DKGRAY);
         title.setPadding(10, 10, 10, 10);
         title.setGravity(Gravity.CENTER);

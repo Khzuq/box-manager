@@ -5,7 +5,7 @@ package com.example.joaolopes.gestbox;
  */
 
 public class API {
-    private static final String ROOT_URL = "http://10.0.2.2:80/BoxManager/";
+    private static final String ROOT_URL = "http://10.0.2.2/BoxManager/";
 
     //Trainings
     public static final String URL_READ_TRAININGS = ROOT_URL + "class.Trainings.php?a=get-trainings";
@@ -18,6 +18,8 @@ public class API {
     public static final String URL_EDIT_CLASSES = ROOT_URL + "class.Classes.php?a=edit-classes";
     public static final String URL_DELETE_CLASSES = ROOT_URL + "class.Classes.php?a=delete-classes&id=";
     public static final String URL_READbyDAY_CLASSES = ROOT_URL + "class.Classes.php?a=get-classes-byday&data=";
+    public static final String URL_ENTRY_CLASSES = ROOT_URL + "class.Classes.php?a=entry-classes";
+    public static final String URL_USERS_CLASSES = ROOT_URL + "class.Classes.php?a=get-students-class";
     //Records
     public static final String URL_CREATE_RECORDS = ROOT_URL + "class.Records.php?a=insert-records";
     public static final String URL_READ_RECORDS = ROOT_URL + "class.Records.php?a=get-records";

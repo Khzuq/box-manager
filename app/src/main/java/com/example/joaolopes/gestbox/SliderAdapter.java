@@ -25,22 +25,34 @@ public class SliderAdapter extends PagerAdapter{
             R.drawable.login,
             R.drawable.menu,
             R.drawable.treinos,
-            R.drawable.aulas
+            R.drawable.aulas,
+            R.drawable.filtro_data,
+            R.drawable.add_pr,
+            R.drawable.pr,
+            R.drawable.mapa
     };
 
 
     public String[] slide_headings={
             "Bem-vindo",
             "Explore",
-            "Fique sempre atualizado",
-            "Fique sempre atualizado"
+            "Todos os treinos",
+            "Fique sempre informado",
+            "Use o nosso filtro",
+            "Adicione o seu novo recorde",
+            "Todos os seus recordes",
+            "Partilhe a sua box"
     };
 
     public String[] slide_text={
-            "Se gosta de BTT esta é uma app pensada em si!",
-            "Explore e fique a conhecer novos percursos através desta comunidade! Faça novos amigos, marque uma volta, isto tudo através da nossa aplicação.",
-            "Na nossa aplicação temos duas seções para a divulgação da modalidade quer de noticias quer de eventos.",
-            "Na nossa aplicação temos duas seções para a divulgação da modalidade quer de noticias quer de eventos."
+            "Esteja sempre a par das novidades da sua box com a nossa APP GestBox",
+            "Explore todas as funcionalidades.",
+            "Quer saber se vai valer a pena ir à aula do dia de hoje? Veja o plano de treino na nossa APP!",
+            "Agora não vai ser problema marcar as aulas.. Com a GestBox pode fazê-lo em qualquer lugar!",
+            "Selecione o dia em que quer marcar a sua aula, de forma mais rápida usando o nosso filtro.",
+            "Guarde todos os seus recordes pessoais, agora já não há desculpas para se esquecer do seu PR!",
+            "Mostre a toda a gente a sua excelente condição física!",
+            "Deseja convidar um amigo? Agora é mais simples, partilhe a localização da sua box."
     };
 
 
