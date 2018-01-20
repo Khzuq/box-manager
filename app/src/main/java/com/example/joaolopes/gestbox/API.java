@@ -5,7 +5,7 @@ package com.example.joaolopes.gestbox;
  */
 
 public class API {
-    private static final String ROOT_URL = "http://10.0.2.2/BoxManager/";
+    private static final String ROOT_URL = "http://lopes.zonaporto.com/BoxManager/";
 
     //Trainings
     public static final String URL_READ_TRAININGS = ROOT_URL + "class.Trainings.php?a=get-trainings";
