@@ -29,6 +29,7 @@ public class API {
     public static final String URL_READ_TEACHERS = ROOT_URL + "class.Teachers.php?a=get-teachers";
     //Modalities
     public static final String URL_READ_MODALITIES = ROOT_URL + "class.Modalities.php?a=get-modalities";
-    //Login
+    //Users
     public static final String URL_LOGIN = ROOT_URL + "class.Users.php?a=login";
+    public static final String URL_PW = ROOT_URL + "class.Users.php?a=change-pw";
 }
