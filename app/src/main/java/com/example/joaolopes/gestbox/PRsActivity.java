@@ -154,16 +154,16 @@ public class PRsActivity extends AppCompatActivity implements NavigationView.OnN
     }
 
     private void DeleteRecords(int id) {
-        Requests req = new Requests(API.URL_DELETE_RECORDS + id, null);
+        Requests req = new Requests(API.URL_DELETE_RECORDS + id + "&id_user=" + Login.getId(), null);
         req.execute();
     }
 
     private void UpdateRecords(int id, int spinner_id, String data, int peso) {
-        Requests req = new Requests(API.URL_EDIT_RECORDS + "&id=" + id + "&data=" + data + "&peso=" + peso + "&modalidade=" + spinner_id, null);
+        Requests req = new Requests(API.URL_EDIT_RECORDS + "&id=" + id + "&data=" + data + "&peso=" + peso + "&modalidade=" + spinner_id + "&id_user=" + Login.getId(), null);
         req.execute();
     }
 
-    private void InsertRecords(int spinner_id, int peso, String data, int id_user) {
+    private void InsertRecords(int spinner_id, int peso, String data) {
         Requests req = new Requests(API.URL_CREATE_RECORDS + "&id_user=" + Login.getId() + "&data=" + data + "&peso=" + peso + "&modalidade=" + spinner_id, null);
         req.execute();
     }
@@ -399,7 +399,7 @@ public class PRsActivity extends AppCompatActivity implements NavigationView.OnN
         save.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                InsertRecords(spinner.getSelectedItemPosition(), Integer.parseInt(peso_pr.getText().toString()), data_pr.getText().toString(), 1);
+                InsertRecords(spinner.getSelectedItemPosition(), Integer.parseInt(peso_pr.getText().toString()), data_pr.getText().toString());
             }
         });
 
